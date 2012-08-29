@@ -47,7 +47,7 @@ module ZMQMachine
   class Address
     attr_reader :host, :port, :transport
 
-    # +type+ : :tcp, :pgm or :inprocess
+    # +type+ : :tcp, :pgm, :epgm or :inproc
     def initialize host, port, type = :tcp
       @host = host
       @port = port
@@ -56,10 +56,10 @@ module ZMQMachine
 
     def to_s
       case @transport
-      when :tcp
-        "#{@transport}://#{@host}:#{@port}"
-      else
+      when :inproc
         "#{@transport}://#{@host}"
+      else
+        "#{@transport}://#{@host}:#{@port}"
       end
     end
     
@@ -98,10 +98,10 @@ module ZMQMachine
       case type.to_sym
       when :inproc
         :inproc
-      when :tcp, :pgm, :ipc
+      when :tcp, :pgm, :epgm, :ipc
         type.to_sym
       else
-        raise UnknownAddressError, "Unknown address transport type [#{type}]; must be :tcp, :pgm, or :inproc"
+        raise UnknownAddressError, "Unknown address transport type [#{type}]; must be :tcp, :epgm, :pgm, or :inproc"
       end
     end
 
